@@ -4,6 +4,8 @@
 > **"Stop scrolling. Start watching."**  
 > CineMatch transforms the 20-minute Fire TV browsing paralysis into an intuitive **45-second interactive guessing game**. Upgraded from a rigid binary decision tree to a **Probabilistic Bayesian Soft-Scoring Engine with Temperature Softmax**, CineMatch reads your movie taste with noise-tolerant math and serves the exact film you crave, ready to stream on Prime Video.
 
+[![CineMatch Demo Video](https://img.shields.io/badge/YouTube-Watch_2--Min_Demo-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=DT2LA6r06MY)
+
 ---
 
 ## 🌟 What's New & Upgraded
