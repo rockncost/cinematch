@@ -6,7 +6,7 @@
 
 ---
 
-## 🌟 What's New & Upgraded (Roadmap 1 Implementation)
+## 🌟 What's New & Upgraded
 
 1. **Probabilistic Bayesian Soft-Scoring (True Akinator Engine)**:
    - Replaced hard elimination (`candidates = [m for m in candidates if m[tag] == 1]`) with **continuous evidence accumulation**.
