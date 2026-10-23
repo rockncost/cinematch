@@ -1,0 +1,802 @@
+/* ==========================================================================
+   CineMatch - Fire TV 10-Foot UI Stylesheet (Enhanced Akinator Edition)
+   Designed for Amazon Fire TV 1080p/4K Screens & Leanback Navigation
+   ========================================================================== */
+
+:root {
+    --bg-dark: #070a11;
+    --card-bg: rgba(18, 24, 38, 0.88);
+    --card-border: rgba(255, 255, 255, 0.12);
+    --accent-prime: #00a8e1;
+    --accent-glow: #38bdf8;
+    --accent-amber: #f59e0b;
+    --accent-purple: #a855f7;
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --tv-overscan-x: 4.5vw;
+    --tv-overscan-y: 4vh;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, 'Amazon Ember', 'Segoe UI', Roboto, sans-serif;
+    font-size: 18px;
+}
+
+/* Dynamic Cinematic Backdrop with Progressive Unblur */
+#backdrop-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+#backdrop {
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    width: calc(100% + 60px);
+    height: calc(100% + 60px);
+    background-size: cover;
+    background-position: center 25%;
+    filter: blur(20px) brightness(0.24) saturate(1.2);
+    transition: filter 0.8s ease, background-image 0.8s ease-in-out;
+}
+
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 45%, rgba(7, 10, 17, 0.45) 0%, rgba(7, 10, 17, 0.95) 90%);
+    z-index: 2;
+}
+
+/* TV Safe Area Container */
+#app-viewport {
+    position: relative;
+    z-index: 3;
+    width: 100vw;
+    height: 100vh;
+    padding: var(--tv-overscan-y) var(--tv-overscan-x);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Top Navigation Bar */
+.tv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-height: 60px;
+    gap: 20px;
+}
+
+.brand-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    display: flex;
+    align-items: center;
+}
+
+.brand-logo .logo-cine {
+    color: #ffffff;
+}
+
+.brand-logo .logo-match {
+    color: var(--accent-glow);
+    text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+}
+
+.badge-tag {
+    background: rgba(0, 168, 225, 0.16);
+    border: 1px solid rgba(0, 168, 225, 0.4);
+    color: var(--accent-glow);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Dealbreakers / Quick Filter Bar */
+.dealbreakers-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dealbreaker-pill {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-secondary);
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dealbreaker-pill.active {
+    background: rgba(0, 168, 225, 0.25);
+    border-color: var(--accent-glow);
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+.dealbreaker-pill.focused {
+    transform: scale(1.08);
+    border-color: var(--accent-glow);
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
+}
+
+/* Header Live Progress & Couch Mode HUD */
+.progress-hud {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.player-turn-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(168, 85, 247, 0.18);
+    border: 1px solid rgba(168, 85, 247, 0.5);
+    color: #e9d5ff;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    animation: pulseGlow 2.5s infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.3); }
+    50% { box-shadow: 0 0 16px rgba(168, 85, 247, 0.6); }
+}
+
+.meter-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.meter-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.meter-bar-track {
+    width: 170px;
+    height: 7px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.meter-bar-fill {
+    height: 100%;
+    width: 18%;
+    background: linear-gradient(90deg, #00a8e1, #38bdf8);
+    box-shadow: 0 0 10px #38bdf8;
+    transition: width 0.4s ease;
+    border-radius: 4px;
+}
+
+.count-chip {
+    background: rgba(30, 41, 59, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 5px 14px;
+    border-radius: 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+/* Main Interactive Screens Stage */
+.screen-stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+}
+
+.view-screen {
+    width: 100%;
+    display: none;
+    animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.view-screen.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================================================
+   Question Screen (Akinator Bayesian Model)
+   ========================================================================== */
+
+.question-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(24px);
+    border-radius: 28px;
+    width: 100%;
+    max-width: 1140px;
+    padding: 3rem 2.5rem 2.2rem 2.5rem;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 40px rgba(0, 168, 225, 0.08);
+    position: relative;
+}
+
+.question-header-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 1.6rem;
+}
+
+.step-indicator {
+    display: inline-block;
+    padding: 5px 18px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-glow);
+    letter-spacing: 0.5px;
+}
+
+.question-prompt {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #ffffff;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* AI Thought Stream (Perceived Cognition UI) */
+.thought-stream-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    padding: 8px 22px;
+    border-radius: 20px;
+    margin-bottom: 2.2rem;
+    max-width: 90%;
+}
+
+.thought-pulse-icon {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-glow);
+    box-shadow: 0 0 10px var(--accent-glow);
+    animation: blinkDot 1.4s infinite ease-in-out;
+}
+
+@keyframes blinkDot {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.thought-stream-text {
+    font-size: 0.95rem;
+    color: #93c5fd;
+    font-style: italic;
+    letter-spacing: 0.3px;
+}
+
+/* 5-Button Likert Choice Layout */
+.actions-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
+
+.likert-buttons-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    flex-wrap: nowrap;
+}
+
+/* Fire TV Buttons */
+.tv-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 26px;
+    border-radius: 16px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: rgba(45, 55, 72, 0.85);
+    border: 3px solid transparent;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.18s cubic-bezier(0.2, 0, 0, 1),
+                border-color 0.18s ease,
+                background-color 0.18s ease,
+                box-shadow 0.18s ease;
+    white-space: nowrap;
+    min-width: 175px;
+}
+
+.btn-yes {
+    background: rgba(16, 185, 129, 0.25);
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.btn-probably {
+    background: rgba(14, 165, 233, 0.25);
+    border-color: rgba(14, 165, 233, 0.4);
+}
+
+.btn-skip {
+    background: rgba(100, 116, 139, 0.3);
+    border-color: rgba(100, 116, 139, 0.4);
+    min-width: 165px;
+}
+
+.btn-unlikely {
+    background: rgba(245, 158, 11, 0.22);
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+.btn-no {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+.secondary-buttons-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.tv-btn-subtle {
+    font-size: 1.1rem;
+    padding: 10px 24px;
+    background: rgba(30, 41, 59, 0.6);
+    color: #cbd5e1;
+    min-width: 150px;
+}
+
+.key-hint {
+    font-size: 0.95rem;
+    font-weight: 800;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 2px 7px;
+    border-radius: 6px;
+    opacity: 0.85;
+}
+
+/* Fire TV Remote Focus State */
+.tv-btn.focused,
+.tv-card.focused,
+.alt-card.focused {
+    transform: scale(1.08);
+    border-color: #38bdf8 !important;
+    background-color: #0284c7 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 35px rgba(56, 189, 248, 0.85), 0 0 10px #38bdf8 !important;
+    z-index: 10;
+}
+
+.tv-btn-subtle.focused {
+    background-color: #334155 !important;
+    border-color: #38bdf8 !important;
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.6) !important;
+}
+
+/* ==========================================================================
+   Recommendation / Result Screen
+   ========================================================================== */
+
+.result-screen {
+    width: 100%;
+    max-width: 1320px;
+}
+
+.result-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 1.2rem;
+}
+
+.result-tag {
+    background: linear-gradient(90deg, #10b981, #059669);
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 6px 16px;
+    border-radius: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.result-confidence-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--accent-glow);
+}
+
+/* Hero Movie Recommendation Card */
+.hero-movie-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(24px);
+    border-radius: 24px;
+    display: flex;
+    gap: 36px;
+    padding: 32px;
+    width: 100%;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    margin-bottom: 22px;
+}
+
+.hero-poster-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    width: 240px;
+    height: 360px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    background: #1e293b;
+}
+
+.hero-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+}
+
+.hero-title {
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.hero-meta-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    color: #cbd5e1;
+}
+
+.rating-badge {
+    color: var(--accent-amber);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pill-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.hero-traits {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.trait-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.trait-chip {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    color: var(--accent-glow);
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.hero-overview {
+    font-size: 1.12rem;
+    line-height: 1.5;
+    color: #cbd5e1;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.hero-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.prime-btn {
+    background: #00a8e1;
+    color: #ffffff;
+    font-size: 1.35rem;
+    padding: 14px 34px;
+}
+
+.prime-btn.focused {
+    background: #0082b0 !important;
+    border-color: #38bdf8 !important;
+}
+
+/* Secondary Recommendations (Alternative Picks) */
+.alternatives-container {
+    width: 100%;
+    text-align: left;
+}
+
+.alternatives-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.alternatives-shelf {
+    display: flex;
+    gap: 18px;
+    width: 100%;
+}
+
+.alt-card {
+    flex: 1;
+    background: rgba(30, 41, 59, 0.7);
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.alt-card-poster {
+    width: 48px;
+    height: 72px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #1e293b;
+}
+
+.alt-card-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.alt-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.alt-card-meta {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 8px;
+}
+
+/* Trailer Theater Modal */
+#trailer-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.94);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+#trailer-modal.active {
+    display: flex;
+}
+
+.trailer-frame-box {
+    width: 80vw;
+    max-width: 1280px;
+    height: 45vw;
+    max-height: 720px;
+    background: #000000;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 50px rgba(0, 168, 225, 0.5);
+    position: relative;
+}
+
+.trailer-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.trailer-modal-bar {
+    width: 80vw;
+    max-width: 1280px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+}
+
+.trailer-modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* TV Footer */
+.tv-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 46px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.remote-hints {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.remote-hint-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.key-icon {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.sound-toggle-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #cbd5e1;
+    padding: 4px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+/* Toast Notification */
+#toast-notification {
+    position: fixed;
+    bottom: 75px;
+    left: 50%;
+    transform: translateX(-50%) translateY(30px);
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid var(--accent-glow);
+    color: #ffffff;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 200;
+}
+
+#toast-notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}

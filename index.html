@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
+    <title>CineMatch • Bayesian Fire TV Movie Akinator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+</head>
+<body>
+    <!-- Dynamic Cinematic Backdrop with Progressive Unblur -->
+    <div id="backdrop-container">
+        <div id="backdrop"></div>
+        <div id="overlay"></div>
+    </div>
+
+    <!-- Main TV Viewport (10-Foot Safe Area) -->
+    <main id="app-viewport">
+        <!-- Top HUD Header -->
+        <header class="tv-header">
+            <div class="brand-wrapper">
+                <div class="brand-logo">
+                    <span class="logo-cine">CINE</span><span class="logo-match">MATCH</span>
+                </div>
+                <span class="badge-tag">Fire TV</span>
+            </div>
+
+            <!-- Upfront Dealbreakers & Couch Mode Toggles -->
+            <div class="dealbreakers-bar" id="dealbreakers-bar">
+                <button class="dealbreaker-pill" id="db-runtime" title="Filter to under 2 hours">
+                    <span>⏱ Under 2h</span>
+                </button>
+                <button class="dealbreaker-pill" id="db-family" title="Exclude horror and dark content">
+                    <span>🛡 Family Safe</span>
+                </button>
+                <button class="dealbreaker-pill" id="btn-duo-toggle" title="Toggle 2-Player Couch Mode">
+                    <span id="duo-label">🎮 Solo Mode</span>
+                </button>
+            </div>
+
+            <div class="progress-hud" id="progress-hud">
+                <div class="player-turn-badge" id="player-badge" style="display: none;">
+                    <span>🎮 Player 1's Turn</span>
+                </div>
+                <div class="meter-box">
+                    <span class="meter-title">Mind Reader Confidence (<span id="conf-pct">18%</span>)</span>
+                    <div class="meter-bar-track">
+                        <div class="meter-bar-fill" id="conf-bar" style="width: 18%;"></div>
+                    </div>
+                </div>
+                <div class="count-chip" id="counter-badge">
+                    <span id="counter-text">150 titles in play</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Interactive Stage -->
+        <section class="screen-stage">
+            <!-- Question Screen -->
+            <div id="question-screen" class="view-screen active">
+                <div class="question-card">
+                    <div class="question-header-meta">
+                        <div class="step-indicator" id="step-badge">Iteration 01 • Candidate Pool: 150 Titles</div>
+                    </div>
+                    
+                    <h1 class="question-prompt" id="question-text">
+                        Calculating optimal Bayesian question...
+                    </h1>
+
+                    <!-- AI Thought Stream (Perceived Cognition UI) -->
+                    <div class="thought-stream-box" id="thought-box">
+                        <span class="thought-pulse-icon"></span>
+                        <span class="thought-stream-text" id="thought-text">Synthesizing candidate matrix & prior probabilities...</span>
+                    </div>
+
+                    <div class="actions-layout">
+                        <!-- 5-Point Likert Choice Row -->
+                        <div class="likert-buttons-row">
+                            <button id="btn-yes" class="tv-btn btn-yes focused" data-answer="YES">
+                                <span class="key-hint">◄◄</span>
+                                <span>YES</span>
+                            </button>
+                            <button id="btn-probably" class="tv-btn btn-probably" data-answer="PROBABLY">
+                                <span class="key-hint">◄</span>
+                                <span>PROBABLY</span>
+                            </button>
+                            <button id="btn-skip" class="tv-btn btn-skip" data-answer="DONT_KNOW">
+                                <span class="key-hint">●</span>
+                                <span>DON'T KNOW</span>
+                            </button>
+                            <button id="btn-unlikely" class="tv-btn btn-unlikely" data-answer="UNLIKELY">
+                                <span>UNLIKELY</span>
+                                <span class="key-hint">►</span>
+                            </button>
+                            <button id="btn-no" class="tv-btn btn-no" data-answer="NO">
+                                <span>NO</span>
+                                <span class="key-hint">►►</span>
+                            </button>
+                        </div>
+
+                        <!-- Secondary Actions Row -->
+                        <div class="secondary-buttons-row">
+                            <button id="btn-undo" class="tv-btn tv-btn-subtle" data-action="UNDO">
+                                <span class="key-hint">▲ Up</span>
+                                <span>UNDO</span>
+                            </button>
+                            <button id="btn-reset" class="tv-btn tv-btn-subtle" data-action="RESET">
+                                <span>🔄 RESTART</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendation / Result Screen -->
+            <div id="result-screen" class="view-screen">
+                <div class="result-screen">
+                    <div class="result-banner">
+                        <span class="result-tag">Top Match Found</span>
+                        <span class="result-confidence-text" id="result-confidence">98% Match for your mood</span>
+                    </div>
+
+                    <!-- Main Hero Card -->
+                    <div class="hero-movie-card">
+                        <div class="hero-poster-wrapper">
+                            <img id="hero-poster" class="hero-poster" src="" alt="Movie Poster">
+                        </div>
+
+                        <div class="hero-content">
+                            <div>
+                                <h1 class="hero-title" id="hero-title">Movie Title</h1>
+                                <div class="hero-meta-row" id="hero-meta">
+                                    <span class="rating-badge" id="hero-rating">★ 8.4/10</span>
+                                    <span class="pill-item" id="hero-year">2024</span>
+                                    <span class="pill-item" id="hero-runtime">2h 15m</span>
+                                    <span class="pill-item" id="hero-genres">Sci-Fi • Adventure</span>
+                                </div>
+                                <div class="hero-traits" id="hero-traits">
+                                    <!-- Dynamic matched tags -->
+                                </div>
+                                <p class="hero-overview" id="hero-overview">
+                                    Movie overview text...
+                                </p>
+                            </div>
+
+                            <div class="hero-actions-row">
+                                <button id="btn-prime" class="tv-btn prime-btn focused">
+                                    <span>▶ Watch on Prime Video</span>
+                                </button>
+                                <button id="btn-trailer" class="tv-btn tv-btn-primary" style="background: rgba(51, 65, 85, 0.9);">
+                                    <span>🎬 Watch Trailer</span>
+                                </button>
+                                <button id="btn-restart" class="tv-btn tv-btn-subtle">
+                                    <span>🔄 Play Again</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alternative Contenders Shelf -->
+                    <div class="alternatives-container">
+                        <div class="alternatives-title">Other Highly-Rated Contenders</div>
+                        <div class="alternatives-shelf" id="alt-shelf">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Remote Navigation Footer -->
+        <footer class="tv-footer">
+            <div class="remote-hints">
+                <div class="remote-hint-item">
+                    <span class="key-icon">◄ ► ▲ ▼</span>
+                    <span>D-Pad Navigate</span>
+                </div>
+                <div class="remote-hint-item">
+                    <span class="key-icon">SELECT / OK</span>
+                    <span>Choose</span>
+                </div>
+                <div class="remote-hint-item">
+                    <span class="key-icon">BACK</span>
+                    <span>Undo / Exit</span>
+                </div>
+            </div>
+            <div>
+                <button class="sound-toggle-btn" id="sound-btn">🔊 Audio Feedback</button>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Trailer Theater Modal -->
+    <div id="trailer-modal">
+        <div class="trailer-frame-box">
+            <iframe id="trailer-iframe" class="trailer-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <div class="trailer-modal-bar">
+            <div class="trailer-modal-title" id="trailer-title">Trailer</div>
+            <button id="btn-close-trailer" class="tv-btn tv-btn-subtle focused">
+                <span class="key-hint">BACK</span> Close Trailer
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification">Notification</div>
+
+    <!-- Scripts -->
+    <script src="assets/sound.js"></script>
+    <script src="js/tmdb_dataset.js"></script>
+    <script src="js/questions_data.js"></script>
+    <script src="js/entropy_engine.js"></script>
+    <script src="js/remote_input.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
